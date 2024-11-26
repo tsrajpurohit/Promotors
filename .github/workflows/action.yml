@@ -1,4 +1,4 @@
-name: Run NSE Option Chain Script
+name: Run Promotors Script
 
 on:
   schedule:
@@ -24,4 +24,4 @@ jobs:
       - name: Run script
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
-        run: python promotors.py
+        run: python Promotors.py
