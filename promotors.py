@@ -7,6 +7,10 @@ import gspread
 from google.oauth2.service_account import Credentials
 import time
 import json
+import pytz
+
+# Set the timezone to Indian Standard Time (IST)
+ist = pytz.timezone('Asia/Kolkata')
 
 # Load environment variables
 load_dotenv()
