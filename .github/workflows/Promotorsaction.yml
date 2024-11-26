@@ -1,8 +1,8 @@
-name: Run Promotors Script
+name: Run NSE Option Chain Script
 
 on:
   schedule:
-    # Run every 3 minutes between 9:15 AM and 3:35 PM IST (which is 3:45 AM and 10:05 AM UTC)
+    # Run every 5 minutes between 9:15 AM and 3:35 PM IST (which is 3:45 AM and 10:05 AM UTC)
     - cron: '*/3 3-10 * * 1-5'
 
 jobs:
@@ -15,13 +15,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: '3.9'
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt  # Install dependencies from requirements.txt
+          pip install gspread oauth2client pandas nsepython python-dotenv
 
       - name: Run script
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
-        run: python Promotors.py  # Make sure the path to the script is correct (e.g., src/Promotors.py)
+        run: python promotors.py
