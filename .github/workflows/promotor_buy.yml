@@ -1,0 +1,42 @@
+name: Run Promotors Script
+
+on:
+  schedule:
+    # Run every day at 10 PM IST, Monday to Friday
+    - cron: '30 16 * * 1-5'  # This cron schedule runs at 4:30 PM UTC, which is 10:00 PM IST, Monday to Friday
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
+
+      - name: Run script
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
+        run: python promotorsTS.py  # Ensure the path to the script is correct
+
+      - name: Commit and push CSV file
+        run: |
+          # Add and commit the CSV file if it was created
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Check if the CSV file exists and add it to the commit
+          if [ -f "nse_filtered_data.csv" ]; then
+            git add nse_filtered_data.csv
+            git commit -m "Add filtered data CSV file"
+            git push
+          else
+            echo "CSV file not found. No changes to commit."
+          fi
