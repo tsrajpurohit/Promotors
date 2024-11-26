@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install gspread oauth2client pandas nsepython python-dotenv
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
 
       - name: Run script
         env:
