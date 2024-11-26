@@ -26,3 +26,18 @@ jobs:
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
         run: python promotorsTS.py  # Ensure the path to the script is correct
+
+      - name: Commit and push CSV file
+        run: |
+          # Add and commit the CSV file if it was created
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Check if the CSV file exists and add it to the commit
+          if [ -f "nse_filtered_data.csv" ]; then
+            git add nse_filtered_data.csv
+            git commit -m "Add filtered data CSV file"
+            git push
+          else
+            echo "CSV file not found. No changes to commit."
+          fi
