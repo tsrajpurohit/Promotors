@@ -4,40 +4,44 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 import time
+import json
 
 # Load environment variables
 load_dotenv()
 
-# Set the Google credentials path from environment variable
-GOOGLE_CREDS_PATH = os.getenv('GOOGLE_SHEETS_CREDENTIALS', 'credentials/credentials.json')
+# Define the scope for Google Sheets API
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# Load credentials from the environment variable
+credentials_json = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
+
+if not credentials_json:
+    raise ValueError("No credentials found. Please set the GOOGLE_SHEETS_CREDENTIALS environment variable.")
+
+# Parse the JSON string from environment variable and load credentials
+try:
+    credentials_info = json.loads(credentials_json)
+    credentials = Credentials.from_service_account_info(credentials_info, scopes=scope)
+except json.JSONDecodeError as e:
+    raise ValueError(f"Failed to parse JSON from GOOGLE_SHEET_CREDENTIALS: {e}")
+
+# Authorize the client
+client = gspread.authorize(credentials)
+
+# Create or open the Google Sheet
+try:
+    sheet = client.open("Pankaj_Power")
+except gspread.SpreadsheetNotFound:
+    sheet = client.create("Pankaj_Power")
+
+# Example: print the first row to verify everything is working
+print(sheet.row_values(1))
 
 # Sheet and tab names (hardcoded)
 SHEET_NAME = 'Pankaj_Power'
 TAB_NAME = 'Promotors'
-
-# Setup Google Sheets authorization
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_CREDS_PATH, scope)
-client = gspread.authorize(creds)
-
-# Open the Google Sheet 'Pankaj_Power'
-try:
-    spreadsheet = client.open(SHEET_NAME)
-    print(f"Using existing sheet: {SHEET_NAME}")
-except gspread.exceptions.SpreadsheetNotFound:
-    print(f"Sheet '{SHEET_NAME}' not found.")
-    exit()
-
-# Check if 'Promotors' tab exists, if not, create it
-try:
-    sheet = spreadsheet.worksheet(TAB_NAME)
-    print(f"Using existing tab: {TAB_NAME}")
-except gspread.exceptions.WorksheetNotFound:
-    print(f"Tab '{TAB_NAME}' not found. Creating a new tab...")
-    sheet = spreadsheet.add_worksheet(title=TAB_NAME, rows="100", cols="20")
-    print(f"New tab '{TAB_NAME}' created.")
 
 # Date range setup
 fromdate = datetime.strftime(datetime.today(), '%d-%m-%Y')
