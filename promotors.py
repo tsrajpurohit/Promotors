@@ -32,9 +32,16 @@ client = gspread.authorize(credentials)
 
 # Create or open the Google Sheet
 try:
-    sheet = client.open("Pankaj_Power")
+    spreadsheet = client.open("Pankaj_Power")
 except gspread.SpreadsheetNotFound:
-    sheet = client.create("Pankaj_Power")
+    spreadsheet = client.create("Pankaj_Power")
+
+# Access the specific worksheet (tab)
+try:
+    sheet = spreadsheet.worksheet("Promotors")
+except gspread.WorksheetNotFound:
+    print(f"Tab 'Promotors' not found. Creating it...")
+    sheet = spreadsheet.add_worksheet(title="Promotors", rows="100", cols="20")
 
 # Example: print the first row to verify everything is working
 print(sheet.row_values(1))
