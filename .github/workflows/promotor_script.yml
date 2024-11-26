@@ -1,4 +1,4 @@
-name: Run NSE Option Chain Script
+name: Run promotor_script Script
 
 on:
   schedule:
