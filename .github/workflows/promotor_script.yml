@@ -3,7 +3,7 @@ name: Run NSE Option Chain Script
 on:
   schedule:
     # Run every 5 minutes between 9:15 AM and 3:35 PM IST (which is 3:45 AM and 10:05 AM UTC)
-    - cron: '*/3 3-10 * * 1-5'
+    - cron: '*/5 3-10 * * 1-5'
 
 jobs:
   run-script:
@@ -24,4 +24,4 @@ jobs:
       - name: Run script
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
-        run: python promotors.py
+        run: python promotors.py 
