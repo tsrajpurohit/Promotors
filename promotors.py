@@ -108,8 +108,10 @@ if 'data' in data and isinstance(data['data'], list):
 
         if not df_filtered.empty:
             # Save the filtered data to CSV
-            df_filtered.to_csv('data/nse_filtered_data.csv', index=False)
-            print("Filtered data saved to data/nse_filtered_data.csv")
+            # Save the filtered data to CSV in the current directory (same as .py file)
+             df_filtered.to_csv('nse_filtered_data.csv', index=False)
+             print("Filtered data saved to nse_filtered_data.csv")
+
 
             # Resize the sheet to accommodate the filtered data size
             num_rows, num_cols = df_filtered.shape
