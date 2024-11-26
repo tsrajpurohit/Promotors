@@ -53,7 +53,7 @@ TAB_NAME = 'Promotors'
 
 # Date range setup
 fromdate = datetime.strftime(datetime.today(), '%d-%m-%Y')
-todate = datetime.today() - timedelta(days=120)
+todate = datetime.today() - timedelta(days=365)
 enddate = datetime.strftime(todate, '%d-%m-%Y')
 
 # URL with the date range
