@@ -1,9 +1,10 @@
-name: Run promotor_script Script
+name: Run Promotors Script
 
 on:
   schedule:
-    # Run every 5 minutes between 9:15 AM and 3:35 PM IST (which is 3:45 AM and 10:05 AM UTC)
-    - cron: '*/5 3-10 * * 1-5'
+    # Run every 3 minutes between 3:45 AM and 10:05 AM UTC on weekdays (Monday to Friday)
+    - cron: '*/3 3-10 * * 1-5'
+  workflow_dispatch:  # Allows manual trigger of the workflow
 
 jobs:
   run-script:
@@ -19,9 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install gspread oauth2client pandas nsepython python-dotenv
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
 
       - name: Run script
         env:
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}  # Ensure this matches the secret's name in GitHub
-        run: python promotors.py 
+        run: python promotors.py  # Ensure the path to the script is correct
